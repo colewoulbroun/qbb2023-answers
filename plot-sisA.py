@@ -21,26 +21,34 @@ for i in range(len(transcripts)):
         row = i
 
 # Find columns with samples of interest
-cols = []
+cols_female = []
+cols_male = []
 for i in range(len(samples)):
     if "female" in samples[i]:
-        cols.append(i)
+        cols_female.append(i)
+    else:
+        cols_male.append(i)
 
 # Subset data of interest
-expression = data[row, cols]
+male_expression = data[row, cols_male]
+female_expression = data[row, cols_female]
 
 # Prepare data
-x = samples[cols]
-y = expression
+x = samples
+x = ["10", "11", "12", "13", "14A", "14B", "14C", "14D"]
+y1 = male_expression
+y2 = female_expression
 
 # Plot data
 fig, ax = plt.subplots()
-ax.set_title("Developmental FBtr0073461 Expression in Females")
+ax.set_title("Developmental FBtr0073461 Expression in Females and Males")
 ax.set_xlabel("Developmental Stage")
 ax.set_ylabel("FBtr0073461 Expression")
-ax.plot(x, y)
+ax.plot(x, y1, label = "Male")
+ax.plot(x, y2, label = "Female")
+ax.legend()
 plt.xticks(rotation = 45, ha = "right")
 plt.tight_layout()
-fig.savefig("FBtr0073461_female.png")
+fig.savefig("FBtr0073461_female_and_male.png")
 plt.show()
 #plt.close(fig)
