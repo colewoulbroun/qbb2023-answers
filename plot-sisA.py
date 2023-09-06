@@ -38,6 +38,7 @@ x = samples
 x = ["10", "11", "12", "13", "14A", "14B", "14C", "14D"]
 y1 = male_expression
 y2 = female_expression
+y3 = 2 * np.array(male_expression)
 
 # Plot data
 fig, ax = plt.subplots()
@@ -46,9 +47,10 @@ ax.set_xlabel("Developmental Stage")
 ax.set_ylabel("FBtr0073461 Expression")
 ax.plot(x, y1, label = "Male")
 ax.plot(x, y2, label = "Female")
+ax.plot(x, y3, label = "2 * Male")
 ax.legend()
 plt.xticks(rotation = 45, ha = "right")
 plt.tight_layout()
-fig.savefig("FBtr0073461_female_and_male.png")
+fig.savefig("FBtr0073461_female_male_2male.png")
 plt.show()
 #plt.close(fig)
