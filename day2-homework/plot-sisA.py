@@ -6,8 +6,19 @@ import matplotlib.pyplot as plt
 # Get dataset to recreate Fig 3B from Lott et al 2011 PLoS Biology https://pubmed.gov/21346796
 # wget https://github.com/bxlab/cmdb-quantbio/raw/main/assignments/lab/bulk_RNA-seq/extra_data/all_annotated.csv
 
-transcripts = np.loadtxt("all_annotated.csv", delimiter=",", usecols=0, dtype="<U30", skiprows=1)
-#print("transcripts: ", transcripts[0:5])
+j = open("all_annotated.csv", "r")
+
+raw_transcripts = j.readlines()
+
+transcripts = []
+
+for i in raw_transcripts:
+    i = i.rstrip()
+    transcript_strings = i.split(",")
+    if transcript_strings[0] == "t_name":
+        continue
+    else:    
+        transcripts.append(transcript_strings[0])
 
 samples = np.loadtxt( "all_annotated.csv", delimiter=",", max_rows=1, dtype="<U30" )[2:]
 #print("samples: ", samples[0:5])
@@ -51,6 +62,6 @@ ax.plot(x, y3, label = "2 * Male")
 ax.legend()
 plt.xticks(rotation = 45, ha = "right")
 plt.tight_layout()
-fig.savefig("FBtr0073461_female_male_2male.png")
+fig.savefig("FBtr0073461_female_male_2male_loop.png")
 plt.show()
 #plt.close(fig)
