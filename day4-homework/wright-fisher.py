@@ -31,6 +31,12 @@ def wright_fisher(allele_freq, pop_size):
 
 allele_calculation = wright_fisher(allele_initial, pop_initial)
 
+print("Allele frequencies for each generation before allele fixation:")
+print(allele_calculation[0])
+
+print("Generation number before allele fixation:")
+print(allele_calculation[1])
+
 fig, ax = plt.subplots()
 x = range(allele_calculation[1])
 y = allele_calculation[0]
