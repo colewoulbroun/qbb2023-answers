@@ -37,8 +37,8 @@ fig, ax = plt.subplots()
 x = allele_frequency
 y = average_fixation_time
 ax.plot(x, y)
-ax.set_title("Changes to Time to Allele Fixation with Allele Frequency")
+ax.set_title("Changes to Generations to Allele Fixation with Allele Frequency")
 ax.set_xlabel("Allele Frequency")
-ax.set_ylabel("Time to Allele Fixation")
+ax.set_ylabel("Generations to Allele Fixation")
 plt.tight_layout()
 plt.show()
