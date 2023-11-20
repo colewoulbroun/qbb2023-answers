@@ -24,11 +24,11 @@ def alignment_algorithm(sequences, scoring_matrix, gap_penalty):
 
 	for i in range(1, len(sequence1) + 1):
 		F_matrix[i, 0] = i * gap_penalty
-		traceback_matrix[i, 0] = 2
+		traceback_matrix[i, 0] = 3
 
 	for j in range(1, len(sequence2) + 1):
 		F_matrix[0, j] = j * gap_penalty
-		traceback_matrix[0, j] = 3
+		traceback_matrix[0, j] = 2
 
 	for i in range(1, len(sequence1) + 1):
 		for j in range(1, len(sequence2) + 1):
