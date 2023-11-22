@@ -30,7 +30,7 @@ def compare_methylation_calls(bismark_file, nanopore_file, readme_file):
     percent_unique_nanopore = len(unique_nanopore_sites) / total_sites * 100
     percent_shared = len(shared_sites) / total_sites * 100
 
-    # Write results to README.md
+    # Write results to week7_README.md
     with open(readme_file, 'a') as readme:
         readme.write(f"\n# Methylation Calls Comparison\n")
         readme.write(f"- Sites present only in Bismark file: {len(unique_bismark_sites)} ({percent_unique_bismark:.2f}%)\n")
