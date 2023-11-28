@@ -78,10 +78,12 @@ def plot_manhattan(gwas_results, drug_name, threshold):
     else:
     	round_number = 1
 
-    significant_snps = gwas_results[gwas_results['P'] < threshold]
+    gwas_results_plot = gwas_results[gwas_results['TEST'] == 'ADD']
+
+    significant_snps = gwas_results_plot[gwas_results_plot['P'] < threshold]
     ax[round_number].scatter(significant_snps.index, -1 * np.log(significant_snps['P']), color = 'red', label = 'Significant, p < 1e-5', zorder = 5)
 
-    non_significant_snps = gwas_results[gwas_results['P'] > threshold]
+    non_significant_snps = gwas_results_plot[gwas_results_plot['P'] > threshold]
     ax[round_number].scatter(non_significant_snps.index, -1 * np.log(non_significant_snps['P']), color = 'blue', label = 'Non-significant, p > 1e-5')
 
     ax[round_number].legend(loc = 'upper right', fontsize = 8, bbox_to_anchor = (1.2, 1), borderaxespad = 0.)
@@ -165,19 +167,19 @@ def extract_phenotypes_from_vcf(vcf_filename, snp_id, phenotype_values):
                     	continue
                 break
 
-    return homozygous_1, homozygous_2, heterozygous
+    return homozygous_1, heterozygous, homozygous_2
 
 
 lowest_p_value, snp_id = lowest_p_value(gwas_results_cb1908)
 
 phenotype_list = retrieve_phenotypes('CB1908_IC50.txt')
 
-homozygous_no_variant, homozygous_variant, heterozygous = extract_phenotypes_from_vcf('genotypes.vcf', snp_id, phenotype_list)
+homozygous_no_variant, heterozygous, homozygous_variant = extract_phenotypes_from_vcf('genotypes.vcf', snp_id, phenotype_list)
 
 
 # Plot data
-genotype_categories = [homozygous_no_variant, homozygous_variant, heterozygous]
-genotype_labels = ['Homozygous - Wild Type', 'Homozygous - Variant', 'Heterozygous']
+genotype_categories = [homozygous_no_variant, heterozygous, homozygous_variant]
+genotype_labels = ['Homozygous - Wild Type', 'Heterozygous', 'Homozygous - Variant']
 
 plt.boxplot(genotype_categories, labels = genotype_labels)
 plt.title(f'Effect Size of SNP ({snp_id}) on CB1908 IC50')
