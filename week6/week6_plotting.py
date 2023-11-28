@@ -62,52 +62,46 @@ plt.savefig('allele_frequency_spectrum.png')
 
 
 
-# # Step 3.2
+# Step 3.2
 
+# Function to read GWAS files
 def read_gwas_results(filename):
-    gwas_results = pd.read_table(filename, delim_whitespace = True)
+    gwas_results = pd.read_csv(filename, delim_whitespace = True)
     return gwas_results
 
 
-def plot_manhattan(ax, gwas_results, drug_name, threshold):
-    gwas_results['log_p_value'] = -np.log10(gwas_results['P'])
-    chromosomes = sorted(set(gwas_results['CHR']))
+# Function to plot Manhattan
+def plot_manhattan(gwas_results, drug_name, threshold):
 
-    for chrom in chromosomes:
-        subset = gwas_results[gwas_results['CHR'] == chrom]
+    if drug_name == 'CB1908':
+    	round_number = 0
+    else:
+    	round_number = 1
 
-        # Sort SNPs within each chromosome by base pair number
-        subset = subset.sort_values(by = 'BP')
+    significant_snps = gwas_results[gwas_results['P'] < threshold]
+    ax[round_number].scatter(significant_snps.index, -1 * np.log(significant_snps['P']), color = 'red', label = 'Significant, p < 1e-5', zorder = 5)
 
-        non_significant_color = plt.cm.Blues((chrom / len(chromosomes)) + 0.1)
-        significant_color = plt.cm.Reds((chrom / len(chromosomes)) + 0.1)
+    non_significant_snps = gwas_results[gwas_results['P'] > threshold]
+    ax[round_number].scatter(non_significant_snps.index, -1 * np.log(non_significant_snps['P']), color = 'blue', label = 'Non-significant, p > 1e-5')
 
-        # Adjust horizontal position within each chromosome segment
-        x_positions = np.arange(len(subset))
+    ax[round_number].legend(loc = 'upper right', fontsize = 8, bbox_to_anchor = (1.2, 1), borderaxespad = 0.)
+    ax[round_number].set_title(f'Manhattan Plot - {drug_name}')
+    ax[round_number].set_xlabel('SNP Index')
+    ax[round_number].set_ylabel('-log10(p-value)')
+    ax[round_number].set_ylim(bottom = -0.5)
 
-        # Plot SNPs based on chromosome position and base pair number
-        ax.scatter(subset['CHR'], subset['log_p_value'], label = f'Chr {chrom}', alpha = 0.5, color = non_significant_color, s = 10, edgecolors = 'none')
 
-        significant_snps = subset[subset['P'] < threshold]
-        ax.scatter(significant_snps['CHR'], significant_snps['log_p_value'], label = f'Chr {chrom} (Significant, p < 1e-5)', alpha = 0.7, color = significant_color, s = 10, edgecolors = 'none')
-
-    ax.set_title(drug_name)
-    ax.set_xlabel('Chromosome Number')
-    ax.set_ylabel('-log10(p-value)')
-    ax.legend(loc = 'upper right', fontsize = 5.5, bbox_to_anchor = (1.2, 1), borderaxespad = 0.)
+# Set up plot
+fig, ax = plt.subplots(nrows = 2, ncols = 1, figsize = (12, 12))
 
 # Reading the GWAS files
 gwas_results_gs451 = read_gwas_results('GS451_GWAS.assoc.linear')
 gwas_results_cb1908 = read_gwas_results('CB1908_GWAS.assoc.linear')
 
-# Create a two-panel figure
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize = (12, 12))
+# Plotting
+plot_manhattan(gwas_results_cb1908, 'CB1908', 1e-5)
+plot_manhattan(gwas_results_gs451, 'GS451', 1e-5)
 
-# Make manhattan plot, highlighting SNPs with p-values < 1e-5 in a different color
-plot_manhattan(ax1, gwas_results_gs451, 'GS451', 1e-5)
-plot_manhattan(ax2, gwas_results_cb1908, 'CB1908', 1e-5)
-
-# Save the figure
 plt.tight_layout()
 plt.savefig('manhattan_plot.png')
 
@@ -115,7 +109,7 @@ plt.savefig('manhattan_plot.png')
 
 # Step 3.3
 
-# identify lowest p-value
+# Identify lowest p-value
 def lowest_p_value(gwas_data):
     lowest_p_value = gwas_data['P'].idxmin()
     snp_id = gwas_data['SNP'][lowest_p_value]
@@ -123,7 +117,7 @@ def lowest_p_value(gwas_data):
     return lowest_p_value, snp_id
 
 
-# retrieve phenotypes
+# Retrieve phenotypes
 def retrieve_phenotypes(phenotype_data):
     with open(phenotype_data, 'r') as data:
     	data_for_phenotypes = data.readlines()
@@ -145,7 +139,7 @@ def retrieve_phenotypes(phenotype_data):
     return phenotypes
 
 
-# retrieve genotypes
+# Retrieve genotypes
 def extract_phenotypes_from_vcf(vcf_filename, snp_id, phenotype_values):
     homozygous_1 = []
     homozygous_2 = []
@@ -181,7 +175,7 @@ phenotype_list = retrieve_phenotypes('CB1908_IC50.txt')
 homozygous_no_variant, homozygous_variant, heterozygous = extract_phenotypes_from_vcf('genotypes.vcf', snp_id, phenotype_list)
 
 
-# plot data
+# Plot data
 genotype_categories = [homozygous_no_variant, homozygous_variant, heterozygous]
 genotype_labels = ['Homozygous - Wild Type', 'Homozygous - Variant', 'Heterozygous']
 
