@@ -71,7 +71,7 @@ significant_genes_homemade = pd.read_csv('homemade_FDR_corrected_genes.txt', sep
 py_deseq2_genes = pd.read_csv('pydeseq2_analysis_results.txt', sep = '\t', index_col = 0)
 
 # Calculate jaccard index
-significant_genes_py_deseq2 = py_deseq2_genes['padj'] < 0.1
+significant_genes_py_deseq2 = py_deseq2_genes.loc[py_deseq2_genes['padj'] < 0.1, :]
 
 significant_genes_overlap = significant_genes_homemade[significant_genes_homemade.index.isin(significant_genes_py_deseq2.index)]
 
