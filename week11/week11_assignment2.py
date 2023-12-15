@@ -18,7 +18,7 @@ plt.savefig('CD79A_CD3D_CST3_UMAP.png')
 
 cell_types = {'CD79A': 'B-cell', 'CD3D': 'T-cell', 'CST3': 'Myeloid'}
 
-new_clusters = [0, 1, 'B-cell', 3, 'T-cell', 5, 'Myeloid', 7]
+new_clusters = ['T-cell', 1, 'B-cell', 3, 4, 5, 'Myeloid', 7]
 
 adata.rename_categories('leiden', new_clusters)
 
