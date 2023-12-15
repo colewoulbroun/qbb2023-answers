@@ -59,7 +59,7 @@ k = 3
 graph = set()
 
 for read in reads:
-    for i in range(len(read) - k + 1):
+    for i in range(len(read) - k):
         kmer1 = read[i: i+k]
         kmer2 = read[i+1: i+1+k]
         
